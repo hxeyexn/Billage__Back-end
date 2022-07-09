@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Board(models.Model):
@@ -18,3 +19,12 @@ class BoardInfo(models.Model):
     category = models.CharField(max_length=20,verbose_name="분류")
     price = models.CharField(max_length=20,verbose_name="가격")
     process_status = models.CharField(max_length=20,verbose_name="상태")  
+
+class Board_comments(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    board_id = models.ForeignKey("Board", related_name="comment", on_delete=models.CASCADE, db_column="board_id")
+    content = models.TextField(blank=False)
+    create_time = models.DateTimeField(auto_now_add=True) 
+    writer = models.ForeignKey("accounts.User",  related_name="writers", on_delete=models.CASCADE)
+    comment_id = models.ForeignKey("Board_comments", related_name="reply", on_delete=models.CASCADE, db_column="comment_id", null=True, blank=True)
+
